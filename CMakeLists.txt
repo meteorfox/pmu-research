@@ -55,33 +55,8 @@ target_compile_options(
                        # output (ie printf)
 )
 
-# set_property(TARGET tgt PROPERTY C_STANDARD 11)
+add_subdirectory(third_party)
+add_executable(hellopfc main.c)
 
-include(ExternalProject)
-ExternalProject_Add(
-  libpfc
-  SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party/libpfc
-  DOWNLOAD_COMMAND ""
-  INSTALL_DIR ${CMAKE_CURRENT_BINARY_DIR}/libpfc-build
-  CONFIGURE_COMMAND meson <SOURCE_DIR> -Dbuildtype=release
-                    --prefix=<INSTALL_DIR>
-  BUILD_COMMAND ninja
-  INSTALL_COMMAND ninja install
-  BUILD_BYPRODUCTS <INSTALL_DIR>/lib/x86_64-linux-gnu/libpfc.so)
 
-ExternalProject_Get_Property(libpfc SOURCE_DIR)
-ExternalProject_Get_Property(libpfc INSTALL_DIR)
-
-add_library(pfc::libpfc STATIC IMPORTED)
-set_target_properties(
-  pfc::libpfc PROPERTIES IMPORTED_LOCATION
-                         ${INSTALL_DIR}/lib/x86_64-linux-gnu/libpfc.so)
-
-add_executable(pfc main.c)
-
-add_dependencies(pfc::libpfc libpfc)
-target_include_directories(pfc::libpfc INTERFACE ${SOURCE_DIR}/include)
-target_link_libraries(pfc::libpfc
-                      INTERFACE ${INSTALL_DIR}/lib/x86_64-linux-gnu/libpfc.so)
-
-target_link_libraries(pfc pfc::libpfc)
+target_link_libraries(hellopfc pfc)
