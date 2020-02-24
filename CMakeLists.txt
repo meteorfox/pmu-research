@@ -56,7 +56,8 @@ target_compile_options(
 )
 
 add_subdirectory(third_party)
-add_executable(hellopfc main.c)
+add_executable(hellopfc hellopfc.c)
+target_link_libraries(hellopfc pfc)
 
 add_executable(hellokvm hellokvm.cpp)
 set_target_properties(hellokvm PROPERTIES
@@ -64,5 +65,3 @@ set_target_properties(hellokvm PROPERTIES
     CXX_STANDARD_REQUIRED ON
 )
 target_link_libraries(hellokvm project_warnings)
-
-target_link_libraries(hellopfc pfc)
